@@ -156,16 +156,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
-      <div className="container mx-auto max-w-12xl px-4 py-5">
+      {/* Centered content container */}
+      <div className="mx-auto w-full max-w-12xl px-3 sm:px-4 py-4 sm:py-6">
         {/* HEADER */}
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-5">
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-5 sm:mb-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-wide">
               KYC AI Orchestrator
             </h1>
-            <p className="text-sm text-slate-400 mt-1 max-w-xl">
+            <p className="text-sm sm:text-base text-slate-400 mt-1 max-w-xl">
               AI-powered KYC that reads documents, validates data, scores risk,
-              and recommends actions — making onboarding effortless and compliant.
+              and recommends actions — making onboarding effortless and
+              compliant.
             </p>
           </div>
           <div className="flex flex-col sm:items-end gap-2">
@@ -178,13 +180,13 @@ function App() {
           </div>
         </header>
 
-        {/* MAIN: row with two cols */}
-        <div className="flex flex-wrap gap-4 justify-between">
+        {/* MAIN: responsive two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
           {/* LEFT COLUMN */}
-          <div className="flex-1 min-w-[320px] col-lg-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {/* Upload Card */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4 sm:p-5">
+              <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <h3 className="text-sm font-semibold">
                     Customer Document Upload
@@ -195,8 +197,11 @@ function App() {
                 </div>
               </div>
 
-              <form onSubmit={handleUpload} className="flex flex-col gap-3 mt-2">
-                <label className="border border-dashed border-slate-600 rounded-xl bg-slate-950/70 hover:border-sky-400 transition-colors cursor-pointer px-4 py-3 flex items-center gap-3">
+              <form
+                onSubmit={handleUpload}
+                className="flex flex-col gap-3 mt-2"
+              >
+                <label className="border border-dashed border-slate-600 rounded-xl bg-slate-950/70 hover:border-sky-400 transition-colors cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
                   <input
                     type="file"
                     className="hidden"
@@ -205,8 +210,8 @@ function App() {
                   <div className="w-9 h-9 rounded-full flex items-center justify-center bg-sky-400/15 text-lg">
                     📄
                   </div>
-                  <div>
-                    <div className="text-sm">
+                  <div className="space-y-0.5">
+                    <div className="text-sm break-all">
                       {file ? file.name : "Click to browse or drag & drop"}
                     </div>
                     <div className="text-[11px] text-slate-400">
@@ -218,10 +223,10 @@ function App() {
                 <button
                   type="submit"
                   className="
-                    inline-flex items-center justify-center rounded-full 
+                    inline-flex items-center justify-center rounded-full
                     bg-gradient-to-r from-indigo-500 to-purple-500 
                     hover:from-indigo-600 hover:to-purple-600
-                    text-white text-xs font-semibold
+                    text-white text-xs sm:text-sm font-semibold
                     px-4 py-2 shadow-md transition-all duration-200
                     disabled:opacity-50 disabled:cursor-not-allowed
                   "
@@ -229,11 +234,12 @@ function App() {
                 >
                   {loading ? "Analyzing..." : "Upload & Run KYC AI"}
                 </button>
-
               </form>
 
               {error && (
-                <p className="text-xs text-red-400 mt-2">{error}</p>
+                <p className="text-xs text-red-400 mt-2 break-words">
+                  {error}
+                </p>
               )}
               {loading && (
                 <p className="text-xs text-slate-400 mt-1">
@@ -245,9 +251,9 @@ function App() {
             {/* Decision + Details */}
             {result && (
               <>
-                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
+                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4 sm:p-5">
                   {/* Decision header */}
-                  <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <h3 className="text-sm font-semibold">Decision Summary</h3>
                     <span
                       className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium ${riskBadgeClass}`}
@@ -263,7 +269,7 @@ function App() {
                         Risk Score
                       </div>
                       <div
-                        className={`mt-1 text-lg font-semibold ${riskColorClass}`}
+                        className={`mt-1 text-lg sm:text-xl font-semibold ${riskColorClass}`}
                       >
                         {result.riskScore}
                       </div>
@@ -276,7 +282,7 @@ function App() {
                       <div className="text-[11px] text-slate-400">
                         OCR Confidence
                       </div>
-                      <div className="mt-1 text-lg font-semibold">
+                      <div className="mt-1 text-lg sm:text-xl font-semibold">
                         {ocrConf !== undefined
                           ? `${ocrConf.toFixed(1)}%`
                           : "N/A"}
@@ -363,8 +369,8 @@ function App() {
                 </div>
 
                 {/* Explainability */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
-                  <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4 sm:p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <h3 className="text-sm font-semibold">
                       Explainability & Rules Applied
                     </h3>
@@ -405,13 +411,11 @@ function App() {
           </div>
 
           {/* RIGHT COLUMN – HISTORY */}
-          <div className="flex-1 lg:flex-none col-lg-6 min-w-[280px] flex flex-col gap-4">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="flex flex-col gap-4">
+            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                 <h3 className="text-sm font-semibold">Recent KYC Checks</h3>
-                <span className="text-[11px] text-slate-400">
-                  Audit trail
-                </span>
+                <span className="text-[11px] text-slate-400">Audit trail</span>
               </div>
 
               {history.length === 0 ? (
@@ -420,7 +424,7 @@ function App() {
                 </p>
               ) : (
                 <div className="mt-2 overflow-x-auto">
-                  <table className="w-full min-w-[520px] text-xs border-collapse">
+                  <table className="w-full min-w-[460px] text-[11px] sm:text-xs border-collapse">
                     <thead>
                       <tr className="bg-slate-950/80">
                         <th className="text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
@@ -432,10 +436,10 @@ function App() {
                         <th className="text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
                           Decision
                         </th>
-                        <th className="text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
+                        <th className="hidden sm:table-cell text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
                           Flags
                         </th>
-                        <th className="text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
+                        <th className="hidden sm:table-cell text-left px-2 py-1.5 border-b border-slate-800 text-slate-400 font-medium">
                           Time
                         </th>
                       </tr>
@@ -459,12 +463,12 @@ function App() {
                           <td className="px-2 py-1.5 border-b border-slate-900">
                             {formatDecision(doc.decision)}
                           </td>
-                          <td className="px-2 py-1.5 border-b border-slate-900">
+                          <td className="hidden sm:table-cell px-2 py-1.5 border-b border-slate-900">
                             {doc.riskFlags && doc.riskFlags.length > 0
                               ? doc.riskFlags.join(", ")
                               : "None"}
                           </td>
-                          <td className="px-2 py-1.5 border-b border-slate-900 text-slate-400">
+                          <td className="hidden sm:table-cell px-2 py-1.5 border-b border-slate-900 text-slate-400">
                             {doc.uploadedAt
                               ? new Date(doc.uploadedAt).toLocaleString()
                               : "-"}
