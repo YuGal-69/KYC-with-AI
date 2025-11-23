@@ -181,7 +181,7 @@ function App() {
         {/* MAIN: row with two cols */}
         <div className="flex flex-wrap gap-4 justify-between">
           {/* LEFT COLUMN */}
-          <div className="flex-1 min-w-[320px] flex flex-col gap-4">
+          <div className="flex-1 min-w-[320px] col-lg-6 flex flex-col gap-4">
             {/* Upload Card */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -405,7 +405,7 @@ function App() {
           </div>
 
           {/* RIGHT COLUMN – HISTORY */}
-          <div className="flex-1 lg:flex-none lg:w-80 xl:w-96 min-w-[280px] flex flex-col gap-4">
+          <div className="flex-1 lg:flex-none col-lg-6 min-w-[280px] flex flex-col gap-4">
             <div className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-soft-glow p-4">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <h3 className="text-sm font-semibold">Recent KYC Checks</h3>
