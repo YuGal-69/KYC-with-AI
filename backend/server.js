@@ -10,6 +10,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// --- ROUTES ---
+app.get("/api/ping", (req, res) => {
+  res.status(200).send("pong");
+});
+
 app.use(
   cors({
     origin: "*", // or ["http://localhost:5173"] if you want to restrict
