@@ -50,11 +50,14 @@ function riskEngine(extractedData = {}, validationIssues = []) {
   }
 
   // 3) Watchlist / sanctions
+  const amlFlags = [];
   if (extractedData.name) {
     const nameLower = extractedData.name.toLowerCase().trim();
-    if (watchlist.includes(nameLower)) {
+    const match = watchlist.find((w) => nameLower.includes(w) || w.includes(nameLower));
+    if (match) {
       riskScore += 80;
       riskFlags.push("Name appears in sanctions / watchlist");
+      amlFlags.push(`Watchlist hit: matched name "${match}" on global PEP/Sanction registry`);
     }
   }
 
@@ -79,6 +82,7 @@ function riskEngine(extractedData = {}, validationIssues = []) {
   return {
     riskScore,
     riskFlags,
+    amlFlags,
     explainability: {
       reason:
         "Rule-based risk scoring (ID completeness, address validity, watchlist screening, OCR confidence, validation issues)",

@@ -46,8 +46,13 @@ export const uploadDocument = async (req, res) => {
       },
     ];
 
-    // 2) OCR on Cloudinary URL
-    const extractedData = await runOCR(documentUrl);
+    // 2) OCR on Local Buffer (avoids Cloudinary network dependency/latency during analysis)
+    const extractedData = await runOCR(req.file.buffer);
+    if (extractedData.docType === "INVALID_FORMAT") {
+      return res.status(400).json({
+        error: "Invalid file format. Only JPG, PNG, and WebP images are supported. PDFs or text files cannot be processed directly.",
+      });
+    }
     stages.push({
       name: "OCR_EXTRACTION",
       status: "completed",
@@ -66,7 +71,7 @@ export const uploadDocument = async (req, res) => {
     });
 
     // 4) Risk engine
-    const { riskScore, riskFlags, explainability } = riskEngine(
+    const { riskScore, riskFlags, amlFlags, explainability } = riskEngine(
       extractedData,
       validationIssues
     );
@@ -104,6 +109,7 @@ export const uploadDocument = async (req, res) => {
       extractedData,
       riskScore,
       riskFlags,
+      amlFlags,
       decision,
       recommendedAction,
       validationIssues,
@@ -130,5 +136,38 @@ export const getHistory = async (req, res) => {
   } catch (err) {
     console.error("❌ /api/kyc/history error:", err);
     return res.status(500).json({ error: "Failed to fetch history" });
+  }
+};
+
+export const updateReviewStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reviewerDecision, reviewerNotes } = req.body;
+
+    if (!reviewerDecision || !["APPROVED", "REJECTED"].includes(reviewerDecision)) {
+      return res.status(400).json({ error: "Invalid reviewer decision. Must be APPROVED or REJECTED" });
+    }
+
+    const record = await KYCRecord.findById(id);
+    if (!record) {
+      return res.status(404).json({ error: "KYC Record not found" });
+    }
+
+    record.reviewerDecision = reviewerDecision;
+    record.reviewerNotes = reviewerNotes || "";
+    record.reviewedAt = new Date();
+    
+    // Push an orchestration stage for review complete
+    record.stages.push({
+      name: `MANUAL_REVIEW_${reviewerDecision}`,
+      status: "completed",
+      timestamp: new Date()
+    });
+
+    await record.save();
+    return res.json(record);
+  } catch (err) {
+    console.error("❌ /api/kyc/review error:", err);
+    return res.status(500).json({ error: "Failed to update review status" });
   }
 };

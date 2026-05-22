@@ -11,6 +11,10 @@ const KYCRecordSchema = new mongoose.Schema(
     recommendedAction: String,
     validationIssues: [String],
     explainability: Object,
+    reviewerDecision: String,
+    reviewerNotes: String,
+    reviewedAt: Date,
+    amlFlags: [String],
     stages: [
       {
         name: String,
